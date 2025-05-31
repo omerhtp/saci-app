@@ -45,10 +45,10 @@ st.subheader("SACI Scores")
 if saci_total is None:
     st.error("Invalid total surface count (≤0). Adjust non-caries tooth counts.")
 else:
-    st.write(f"**SACI-total:** {saci_total:.2f}%")
-    st.write(f"**SACI-active:** {saci_active:.2f}%")
-    st.write(f"**SACI-loss:** {saci_loss:.2f}%")
-    st.write(f"**SACI-restoration:** {saci_restoration:.2f}%")
+    st.write(f"**SACI-total:** {saci_total:.2f}")
+    st.write(f"**SACI-active:** {saci_active:.2f}")
+    st.write(f"**SACI-loss:** {saci_loss:.2f}")
+    st.write(f"**SACI-restoration:** {saci_restoration:.2f}")
 
 st.markdown("---")
 st.markdown("Developed based on the SACI framework integrating active lesions, caries-related tooth loss, and restorations, with submodel breakdown for granular analysis.")
