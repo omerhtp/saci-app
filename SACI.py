@@ -15,18 +15,13 @@ NF4_plus = st.sidebar.number_input("4+ surface fillings or crowns (NF4+)", min_v
 NMnc_ant = st.sidebar.number_input("Anterior teeth missing non-caries (NMnc_ant)", min_value=0, step=1)
 NMnc_post = st.sidebar.number_input("Posterior teeth missing non-caries (NMnc_post)", min_value=0, step=1)
 
-# Calculate components
+# Calculate component scores
 da_score = 0.5 * S1_2 + 1.0 * S3_4 + 2.0 * S5_6
 mc_score = 4 * NMc_ant + 5 * NMc_post
 fc_score = 1 * NF1 + 2 * NF2_3 + 3 * NF4_plus
 
+# Calculate total available surfaces
 total_surfaces = 128 - (4 * NMnc_ant) - (5 * NMnc_post)
-
-# Compute SACI
-if total_surfaces <= 0:
-    saci = None
-else:
-    saci = (da_score + mc_score + fc_score) / total_surfaces * 100
 
 st.subheader("Component Scores")
 st.write(f"**Weighted Active Caries Score (Dₐ):** {da_score:.2f}")
@@ -34,11 +29,26 @@ st.write(f"**Missing Due to Caries Score (M_c):** {mc_score:.2f}")
 st.write(f"**Restored Due to Caries Score (F_c):** {fc_score:.2f}")
 st.write(f"**Total Available Surfaces (S_total):** {total_surfaces}")
 
-st.subheader("Final SACI")
-if saci is None:
-    st.error("Total available surface count invalid (≤0). Adjust non-caries tooth counts.")
+# Compute submodel scores if valid
+def compute_scores():
+    if total_surfaces <= 0:
+        return None, None, None, None
+    saci_total = (da_score + mc_score + fc_score) / total_surfaces * 100
+    saci_active = (da_score / total_surfaces) * 100
+    saci_loss = (mc_score / total_surfaces) * 100
+    saci_restoration = (fc_score / total_surfaces) * 100
+    return saci_total, saci_active, saci_loss, saci_restoration
+
+saci_total, saci_active, saci_loss, saci_restoration = compute_scores()
+
+st.subheader("SACI Scores")
+if saci_total is None:
+    st.error("Invalid total surface count (≤0). Adjust non-caries tooth counts.")
 else:
-    st.success(f"Severity-Adjusted Caries Index: {saci:.2f}")
+    st.write(f"**SACI-total:** {saci_total:.2f}%")
+    st.write(f"**SACI-active:** {saci_active:.2f}%")
+    st.write(f"**SACI-loss:** {saci_loss:.2f}%")
+    st.write(f"**SACI-restoration:** {saci_restoration:.2f}%")
 
 st.markdown("---")
-st.markdown("Developed based on the SACI formula integrating ICDAS scores, missing and restored teeth weights, and normalization for non-caries-related tooth loss.")
+st.markdown("Developed based on the SACI framework integrating active lesions, caries-related tooth loss, and restorations, with submodel breakdown for granular analysis.")
