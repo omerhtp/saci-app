@@ -16,9 +16,9 @@ NMnc_ant = st.sidebar.number_input("Anterior teeth missing non-caries (NMnc_ant)
 NMnc_post = st.sidebar.number_input("Posterior teeth missing non-caries (NMnc_post)", min_value=0, step=1)
 
 # Calculate component scores
-da_score = 0.5 * S1_2 + 1.0 * S3_4 + 2.0 * S5_6
-mc_score = 4 * NMc_ant + 5 * NMc_post
-fc_score = 1 * NF1 + 2 * NF2_3 + 3 * NF4_plus
+da_score = 1 * S1_2 + 2 * S3_4 + 4 * S5_6
+mc_score = 28 * NMc_ant + 30 * NMc_post
+fc_score = 2 * NF1 + 3 * NF2_3 + 15 * NF4_plus
 
 # Calculate total available surfaces
 total_surfaces = 128 - (4 * NMnc_ant) - (5 * NMnc_post)
